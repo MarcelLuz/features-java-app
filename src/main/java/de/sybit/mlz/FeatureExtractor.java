@@ -9,12 +9,12 @@ import java.util.List;
 public class FeatureExtractor {
 
     private final static Logger LOGGER = Logger.getLogger(FeatureExtractor.class.getName());
-    private String jarName;
+    private final static String INNER_QUOTE = "\"";
+    private String jarPath;
 
 
-    public FeatureExtractor(String jarName) {
-        this.jarName = jarName;
-
+    public FeatureExtractor(String jarPath) {
+        this.jarPath = jarPath;
     }
 
 
@@ -30,16 +30,14 @@ public class FeatureExtractor {
 
     }
 
-    // Example: javac -cp .\features-javac-1.0.0-SNAPSHOT-jar-with-dependencies.jar -Xplugin:"FeaturePlugin D:\Repos\master-imp\01_Data\features-java-graph-app\src\main\resources\proto false" .\Test.java
     private void callExtractorJar(String filePath, String destinationPath, boolean dotFile) {
         try {
-            String featurePluginCall = "-Xplugin:\"FeaturePlugin"  + destinationPath + " " + dotFile + "\"";
-
-            String[] command = {"javac", "-cp", jarName, featurePluginCall, filePath};
+            String[] command = {"javac", "-cp", jarPath, "-Xplugin:" + INNER_QUOTE + "FeaturePlugin",
+                    destinationPath, dotFile + INNER_QUOTE, filePath};
             ProcessBuilder processBuilder = new ProcessBuilder().inheritIO().command(command);
             processBuilder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioException) {
+            LOGGER.error("Error calling Extractor!", ioException);
         }
     }
 }
