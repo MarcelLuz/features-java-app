@@ -17,6 +17,29 @@
                     <target>12</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                    </compilerArgs>
+                    <source>1.12</source>
+                    <target>1.12</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -36,6 +59,20 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.cam.acr31</groupId>
+            <artifactId>features-javac</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/features-javac-1.0.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>JavaExtractor</groupId>
+            <artifactId>JPredict</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/JavaExtractor-0.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

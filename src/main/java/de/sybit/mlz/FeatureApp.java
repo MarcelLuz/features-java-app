@@ -32,7 +32,7 @@ public class FeatureApp {
             case FEATURE_JAVAC_EXTRACTOR_KEY: {
                 FeatureJavacExtractor featureJavacExtractor = new FeatureJavacExtractor(pathToFeaturesJavacJar);
                 featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, commandLineOutput);
-                featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, commandLineOutput);
+//                featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, commandLineOutput);
                 break;
             }
             case PATH_EXTRACTOR_KEY: {
