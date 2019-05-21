@@ -3,6 +3,7 @@ package de.sybit.mlz;
 import de.sybit.mlz.extractors.graph.FeatureJavacExtractor;
 import de.sybit.mlz.extractors.path.PathExtractor;
 import de.sybit.mlz.utils.PropertiesLoader;
+import de.sybit.mlz.utils.RepoAnalyser;
 import org.apache.log4j.Logger;
 
 import java.util.Properties;
@@ -41,7 +42,10 @@ public class FeatureApp {
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
                     featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
                 } else if (extractMode.equals(PATH_MODE)) {
+                    LOGGER.info("Number of java files to process: " + RepoAnalyser.getNumberOfFilesInRepo(pathToRepo));
+                    LOGGER.info("Start to process repo.");
                     featureJavacExtractor.extractProtoFromAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot, numThreads);
+                    LOGGER.info("Finished possessing");
                 }
                 break;
             }
@@ -55,9 +59,12 @@ public class FeatureApp {
                 );
 
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
-                    pathExtractor.extractPathsFromSingleFile(pathToFile,destinationPath);
+                    pathExtractor.extractPathsFromSingleFile(pathToFile, destinationPath);
                 } else if (extractMode.equals(PATH_MODE)) {
-                    pathExtractor.extractPathsFromAllFilesInDirectory(pathToRepo,destinationPath, numThreads);
+                    LOGGER.info("Number of java files to process: " + RepoAnalyser.getNumberOfFilesInRepo(pathToRepo));
+                    LOGGER.info("Start to process repo.");
+                    pathExtractor.extractPathsFromAllFilesInDirectory(pathToRepo, destinationPath, numThreads);
+                    LOGGER.info("Finished possessing");
                 }
                 break;
             }

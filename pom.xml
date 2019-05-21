@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.sybit.mlz</groupId>
-    <artifactId>features-java-graph-app</artifactId>
+    <artifactId>java-preprocessor-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <repositories>
