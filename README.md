@@ -21,10 +21,18 @@ Extract graph's from java files (in .proto)
 
 Can be used to predict variable names or method names.
 
+## ML-Model-Implementation
+* original repo: https://github.com/dmitrykazhdan/Representing-Programs-with-Graphs
+* modified repo: https://github.com/MarcelLuz/Representing-Programs-with-Graphs
+
 ## java-extractor
 Extracts the AST-paths form java methods.
 
 Can be used to predict method names or generate java-doc
+
+## ML-Model-Implementation
+* original repo: https://github.com/tech-srl/code2seq
+* modified repo: https://github.com/MarcelLuz/code2seq
 
 ## Prerequisite
 
