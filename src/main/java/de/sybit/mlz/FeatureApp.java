@@ -18,29 +18,26 @@ public class FeatureApp {
 
         final String extractorType = config.getProperty("whichExtractor");
 
-        final String pathToFeaturesJavacJar = config.getProperty("pathToFeaturesJavacJar");
-        final String pathToPathExtractorJar = config.getProperty("pathToPathExtractorJar");
-
         final String pathToFile = config.getProperty("pathToFile");
         final String pathToRepo = config.getProperty("pathToRepo");
 
         final String destinationPath = config.getProperty("destinationPath");
         final boolean dotOutput = Boolean.valueOf(config.getProperty("dotOutput"));
-        final boolean commandLineOutput = Boolean.valueOf(config.getProperty("commandLineOutput"));
+        final boolean verboseDot = Boolean.valueOf(config.getProperty("verboseDot"));
 
         switch (extractorType) {
             case FEATURE_JAVAC_EXTRACTOR_KEY: {
-                FeatureJavacExtractor featureJavacExtractor = new FeatureJavacExtractor(pathToFeaturesJavacJar);
-                featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, commandLineOutput);
-//                featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, commandLineOutput);
+                FeatureJavacExtractor featureJavacExtractor = new FeatureJavacExtractor();
+                featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
+//                featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot);
                 break;
             }
             case PATH_EXTRACTOR_KEY: {
-                PathExtractor pathExtractor = new PathExtractor(pathToPathExtractorJar);
+                PathExtractor pathExtractor = new PathExtractor();
                 break;
             }
             default: {
-                LOGGER.error("Wrong Extractor Type: You can only use feature-javac or  path-extractor");
+                LOGGER.error("wrong extractor type: you can only use feature-javac or  path-extractor");
                 break;
             }
         }
