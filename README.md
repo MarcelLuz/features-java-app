@@ -1,7 +1,8 @@
-# Features-Java-App
-A java command line tool to extract Machine Learning Features from Java Repos or single Files.
+# Java-Preprocessor-App
+A java command line tool to preprocess java files for machine learning.
+It can process single or multiple files in a repo at the same time.
 
-This App uses two different extractor (JAR's) for Feature creation:
+This App uses two different extractor (Lib's(JAR's)) for feature extraction:
 
 * features-javac
   * (A javac plugin for extracting a feature graph for plugging in to machine learning models)
@@ -16,18 +17,19 @@ This App uses two different extractor (JAR's) for Feature creation:
   * Licence: MIT
 
 ## features-javac
-Extract Graph's from Java Files (in .proto)
+Extract graph's from java files (in .proto)
 
 Can be used to predict variable names or method names.
 
 ## java-extractor
-Extracts the AST-Paths form Java-Methods.
+Extracts the AST-paths form java methods.
 
 Can be used to predict method names or generate java-doc
 
 ## Prerequisite
 
-JDK 1.12 min language-level 1.8+
+JDK 1.12+
+
 Maven 3.5+
 
 ## Configuration
