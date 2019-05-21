@@ -1,6 +1,5 @@
-package de.sybit.mlz.extractors.impl;
+package de.sybit.mlz.extractors.graph;
 
-import de.sybit.mlz.extractors.Extractor;
 import de.sybit.mlz.utils.Compilation;
 import de.sybit.mlz.utils.FileExtractor;
 import org.apache.log4j.Logger;
@@ -13,17 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class FeatureJavacExtractor implements Extractor {
+public class FeatureJavacExtractor {
 
     private final static Logger LOGGER = Logger.getLogger(FeatureJavacExtractor.class.getName());
 
-    @Override
     public void extractProtoFromSingleFile(String filePath, String destinationPath, boolean dotFile, boolean verboseDot) {
         compileJavaFile(filePath, destinationPath, verboseDot, dotFile);
     }
 
 
-    @Override
     public void extractProtoAllFilesInDirectory(String projectPath, String destinationPath, boolean dotFile, boolean verboseDot) {
         FileExtractor fileExtractor = new FileExtractor();
         List<String> allFilePaths = fileExtractor.getAllFilePaths(projectPath);

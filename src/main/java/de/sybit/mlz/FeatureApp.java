@@ -1,7 +1,7 @@
 package de.sybit.mlz;
 
-import de.sybit.mlz.extractors.impl.FeatureJavacExtractor;
-import de.sybit.mlz.extractors.impl.PathExtractor;
+import de.sybit.mlz.extractors.graph.FeatureJavacExtractor;
+import de.sybit.mlz.extractors.path.PathExtractor;
 import de.sybit.mlz.utils.PropertiesLoader;
 import org.apache.log4j.Logger;
 
@@ -12,28 +12,53 @@ public class FeatureApp {
     private final static Logger LOGGER = Logger.getLogger(FeatureApp.class.getName());
     private final static String FEATURE_JAVAC_EXTRACTOR_KEY = "feature-javac";
     private final static String PATH_EXTRACTOR_KEY = "path-extractor";
+    private final static String SINGLE_FILE_MODE = "single-file";
+    private final static String PATH_MODE = "path";
 
     public static void main(String[] args) {
         final Properties config = PropertiesLoader.loadProperties("app.properties");
 
         final String extractorType = config.getProperty("whichExtractor");
+        final String extractMode = config.getProperty("extractMode");
+        final int numThreads = Integer.valueOf(config.getProperty("numThreads"));
 
         final String pathToFile = config.getProperty("pathToFile");
         final String pathToRepo = config.getProperty("pathToRepo");
-
         final String destinationPath = config.getProperty("destinationPath");
+
         final boolean dotOutput = Boolean.valueOf(config.getProperty("dotOutput"));
         final boolean verboseDot = Boolean.valueOf(config.getProperty("verboseDot"));
+
+        final int maxPathLength = Integer.valueOf(config.getProperty("maxPathLength"));
+        final int maxPathWidth = Integer.valueOf(config.getProperty("maxPathWidth"));
+        final int minCodeLen = Integer.valueOf(config.getProperty("minCodeLen"));
+        final int maxCodeLen = Integer.valueOf(config.getProperty("maxCodeLen"));
+        final int maxChildId = Integer.valueOf(config.getProperty("maxChildId"));
 
         switch (extractorType) {
             case FEATURE_JAVAC_EXTRACTOR_KEY: {
                 FeatureJavacExtractor featureJavacExtractor = new FeatureJavacExtractor();
-                featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
-//                featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot);
+                if (extractMode.equals(SINGLE_FILE_MODE)) {
+                    featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
+                } else if (extractMode.equals(PATH_MODE)) {
+                    featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot);
+                }
                 break;
             }
             case PATH_EXTRACTOR_KEY: {
-                PathExtractor pathExtractor = new PathExtractor();
+                PathExtractor pathExtractor = new PathExtractor(
+                        maxPathLength,
+                        maxPathWidth,
+                        minCodeLen,
+                        maxCodeLen,
+                        maxChildId
+                );
+
+                if (extractMode.equals(SINGLE_FILE_MODE)) {
+                    pathExtractor.extractProtoFromSingleFile(pathToFile,destinationPath);
+                } else if (extractMode.equals(PATH_MODE)) {
+                    pathExtractor.extractProtoAllFilesInDirectory(pathToRepo,destinationPath, numThreads);
+                }
                 break;
             }
             default: {
