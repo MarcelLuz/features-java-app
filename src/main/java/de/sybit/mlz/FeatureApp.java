@@ -41,7 +41,7 @@ public class FeatureApp {
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
                     featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
                 } else if (extractMode.equals(PATH_MODE)) {
-                    featureJavacExtractor.extractProtoAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot);
+                    featureJavacExtractor.extractProtoFromAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot, numThreads);
                 }
                 break;
             }
@@ -55,9 +55,9 @@ public class FeatureApp {
                 );
 
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
-                    pathExtractor.extractProtoFromSingleFile(pathToFile,destinationPath);
+                    pathExtractor.extractPathsFromSingleFile(pathToFile,destinationPath);
                 } else if (extractMode.equals(PATH_MODE)) {
-                    pathExtractor.extractProtoAllFilesInDirectory(pathToRepo,destinationPath, numThreads);
+                    pathExtractor.extractPathsFromAllFilesInDirectory(pathToRepo,destinationPath, numThreads);
                 }
                 break;
             }

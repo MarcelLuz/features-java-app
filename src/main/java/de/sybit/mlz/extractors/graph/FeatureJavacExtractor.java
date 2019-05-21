@@ -1,44 +1,69 @@
 package de.sybit.mlz.extractors.graph;
 
-import de.sybit.mlz.utils.Compilation;
-import de.sybit.mlz.utils.FileExtractor;
 import org.apache.log4j.Logger;
-import uk.ac.cam.acr31.features.javac.FeaturePlugin;
-import uk.ac.cam.acr31.features.javac.graph.FeatureGraph;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class FeatureJavacExtractor {
 
     private final static Logger LOGGER = Logger.getLogger(FeatureJavacExtractor.class.getName());
 
     public void extractProtoFromSingleFile(String filePath, String destinationPath, boolean dotFile, boolean verboseDot) {
-        compileJavaFile(filePath, destinationPath, verboseDot, dotFile);
+        Path fileAsPath = Path.of(filePath);
+        Path destinationPathAsPath = Path.of(destinationPath);
+        InternalExtractFeaturesTask internalExtractfeaturesTask = new InternalExtractFeaturesTask(
+                fileAsPath,
+                destinationPathAsPath,
+                dotFile,
+                verboseDot
+        );
+        internalExtractfeaturesTask.processFileSingleFile();
     }
 
 
-    public void extractProtoAllFilesInDirectory(String projectPath, String destinationPath, boolean dotFile, boolean verboseDot) {
-        FileExtractor fileExtractor = new FileExtractor();
-        List<String> allFilePaths = fileExtractor.getAllFilePaths(projectPath);
-        allFilePaths.forEach(filePath -> compileJavaFile(filePath, destinationPath, verboseDot, dotFile));
-
-    }
-
-    private void compileJavaFile(String filePath, String destinationPath, boolean verboseDot, boolean dotFile) {
+    public void extractProtoFromAllFilesInDirectory(String projectPath, String destinationPath, boolean dotFile, boolean verboseDot, int numThreads) {
+        Path destinationPathAsPath = Path.of(destinationPath);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
+        LinkedList<InternalExtractFeaturesTask> tasks = new LinkedList<>();
         try {
-            Path fileAsPath = Paths.get(filePath);
-            String name = fileAsPath.getFileName().toString();
-            String content = new String(Files.readAllBytes(fileAsPath));
-            Compilation compilation = Compilation.compile(name, content);
-            FeatureGraph featureGraph = FeaturePlugin.createFeatureGraph(compilation.compilationUnit(), compilation.context());
-            FeaturePlugin.writeOutput(featureGraph, destinationPath, verboseDot, dotFile);
+            Files.walk(Paths.get(projectPath)).filter(Files::isRegularFile)
+                    .filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(fileAsPath -> {
+                InternalExtractFeaturesTask task = new InternalExtractFeaturesTask(
+                        fileAsPath,
+                        destinationPathAsPath,
+                        dotFile,
+                        verboseDot
+                );
+                tasks.add(task);
+            });
         } catch (IOException e) {
-            LOGGER.error("can not parse java compilation task", e);
+            e.printStackTrace();
+            return;
         }
-
+        List<Future<Void>> tasksResults = null;
+        try {
+            tasksResults = executor.invokeAll(tasks);
+        } catch (InterruptedException e) {
+            LOGGER.error("multithreading for proto failed",e);
+        } finally {
+            executor.shutdown();
+        }
+        Objects.requireNonNull(tasksResults).forEach(f -> {
+            try {
+                f.get();
+            } catch (InterruptedException | ExecutionException e) {
+                LOGGER.error("multithreading for proto failed",e);
+            }
+        });
     }
 }

@@ -12,6 +12,7 @@ import com.sun.tools.javac.util.Context;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import java.io.IOException;
+import java.io.Writer;
 import java.net.URI;
 
 @AutoValue
@@ -39,7 +40,9 @@ public abstract class Compilation {
                         return source;
                     }
                 });
-        JavacTask task = javacTool.getTask(null, null,
+        // disable compiler-output
+        Writer writer = Writer.nullWriter();
+        JavacTask task = javacTool.getTask(writer, null,
                 null, null, null, compilationUnits, context);
         JCTree.JCCompilationUnit compilationUnit =
                 (JCTree.JCCompilationUnit) Iterables.getOnlyElement(task.parse());

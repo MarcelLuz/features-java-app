@@ -49,21 +49,21 @@ public class PathExtractor {
         }
     }
 
-    public void extractProtoFromSingleFile(String filePath, String destinationPath) {
+    public void extractPathsFromSingleFile(String filePath, String destinationPath) {
         Path fileAsPath = Path.of(filePath);
         Path destinationPathAsPath = Path.of(destinationPath);
-        InternalExtractFeaturesTask extractFeaturesTask = new InternalExtractFeaturesTask(extractorConfig, fileAsPath);
+        InternalExtractPathsTask extractFeaturesTask = new InternalExtractPathsTask(extractorConfig, fileAsPath);
         extractFeaturesTask.processFileSingleFile(fileAsPath.getFileName().toString(), destinationPathAsPath);
     }
 
-    public void extractProtoAllFilesInDirectory(String projectPath, String destinationPath, int numThreads) {
+    public void extractPathsFromAllFilesInDirectory(String projectPath, String destinationPath, int numThreads) {
         Path destinationPathAsPath = Path.of(destinationPath);
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
         LinkedList<ExtractFeaturesTask> tasks = new LinkedList<>();
         try {
             Files.walk(Paths.get(projectPath)).filter(Files::isRegularFile)
                     .filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(fileAsPath -> {
-                InternalExtractFeaturesTask task = new InternalExtractFeaturesTask(extractorConfig, fileAsPath);
+                InternalExtractPathsTask task = new InternalExtractPathsTask(extractorConfig, fileAsPath);
                 task.setDestinationPath(destinationPathAsPath);
                 tasks.add(task);
             });
@@ -75,7 +75,7 @@ public class PathExtractor {
         try {
             tasksResults = executor.invokeAll(tasks);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("multithreading for paths failed",e);
         } finally {
             executor.shutdown();
         }
@@ -83,7 +83,7 @@ public class PathExtractor {
             try {
                 f.get();
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                LOGGER.error("multithreading for paths failed",e);
             }
         });
     }

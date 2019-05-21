@@ -16,9 +16,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class InternalExtractFeaturesTask extends ExtractFeaturesTask {
+public class InternalExtractPathsTask extends ExtractFeaturesTask {
 
-    private final static Logger LOGGER = Logger.getLogger(InternalExtractFeaturesTask.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(InternalExtractPathsTask.class.getName());
     private Path destinationPath;
 
     @Override
@@ -27,7 +27,7 @@ public class InternalExtractFeaturesTask extends ExtractFeaturesTask {
         return null;
     }
 
-    public InternalExtractFeaturesTask(CommandLineValues commandLineValues, Path path) {
+    public InternalExtractPathsTask(CommandLineValues commandLineValues, Path path) {
         super(commandLineValues, path);
     }
 
