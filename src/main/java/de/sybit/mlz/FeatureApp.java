@@ -25,26 +25,28 @@ public class FeatureApp {
 
         final String pathToFile = config.getProperty("pathToFile");
         final String pathToRepo = config.getProperty("pathToRepo");
-        final String destinationPath = config.getProperty("destinationPath");
 
         final boolean dotOutput = Boolean.valueOf(config.getProperty("dotOutput"));
         final boolean verboseDot = Boolean.valueOf(config.getProperty("verboseDot"));
+        final String protoDestinationPath = config.getProperty("protoDestinationPath");
 
         final int maxPathLength = Integer.valueOf(config.getProperty("maxPathLength"));
         final int maxPathWidth = Integer.valueOf(config.getProperty("maxPathWidth"));
         final int minCodeLen = Integer.valueOf(config.getProperty("minCodeLen"));
         final int maxCodeLen = Integer.valueOf(config.getProperty("maxCodeLen"));
         final int maxChildId = Integer.valueOf(config.getProperty("maxChildId"));
+        final String datasetDestinationPath = config.getProperty("datasetDestinationPath");
+        final String datasetName = config.getProperty("datasetName");
 
         switch (extractorType) {
             case FEATURE_JAVAC_EXTRACTOR_KEY: {
                 FeatureJavacExtractor featureJavacExtractor = new FeatureJavacExtractor();
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
-                    featureJavacExtractor.extractProtoFromSingleFile(pathToFile, destinationPath, dotOutput, verboseDot);
+                    featureJavacExtractor.extractProtoFromSingleFile(pathToFile, protoDestinationPath, dotOutput, verboseDot);
                 } else if (extractMode.equals(PATH_MODE)) {
                     LOGGER.info("Number of java files to process: " + RepoAnalyser.getNumberOfFilesInRepo(pathToRepo));
                     LOGGER.info("Start to process repo.");
-                    featureJavacExtractor.extractProtoFromAllFilesInDirectory(pathToRepo, destinationPath, dotOutput, verboseDot, numThreads);
+                    featureJavacExtractor.extractProtoFromAllFilesInDirectory(pathToRepo, protoDestinationPath, dotOutput, verboseDot, numThreads);
                     LOGGER.info("Finished possessing");
                 }
                 break;
@@ -57,13 +59,12 @@ public class FeatureApp {
                         maxCodeLen,
                         maxChildId
                 );
-
                 if (extractMode.equals(SINGLE_FILE_MODE)) {
-                    pathExtractor.extractPathsFromSingleFile(pathToFile, destinationPath);
+                    pathExtractor.extractPathsFromSingleFile(pathToFile, datasetDestinationPath);
                 } else if (extractMode.equals(PATH_MODE)) {
                     LOGGER.info("Number of java files to process: " + RepoAnalyser.getNumberOfFilesInRepo(pathToRepo));
                     LOGGER.info("Start to process repo.");
-                    pathExtractor.extractPathsFromAllFilesInDirectory(pathToRepo, destinationPath, numThreads);
+                    pathExtractor.extractPathsFromAllFilesInDirectory(pathToRepo, datasetDestinationPath, datasetName, numThreads);
                     LOGGER.info("Finished possessing");
                 }
                 break;

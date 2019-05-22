@@ -56,7 +56,7 @@ public class PathExtractor {
         extractFeaturesTask.processFileSingleFile(fileAsPath.getFileName().toString(), destinationPathAsPath);
     }
 
-    public void extractPathsFromAllFilesInDirectory(String projectPath, String destinationPath, int numThreads) {
+    public void extractPathsFromAllFilesInDirectory(String projectPath, String destinationPath, String datasetName, int numThreads) {
         Path destinationPathAsPath = Path.of(destinationPath);
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numThreads);
         LinkedList<ExtractFeaturesTask> tasks = new LinkedList<>();
@@ -65,6 +65,7 @@ public class PathExtractor {
                     .filter(p -> p.toString().toLowerCase().endsWith(".java")).forEach(fileAsPath -> {
                 InternalExtractPathsTask task = new InternalExtractPathsTask(extractorConfig, fileAsPath);
                 task.setDestinationPath(destinationPathAsPath);
+                task.setDatasetName(datasetName);
                 tasks.add(task);
             });
         } catch (IOException e) {

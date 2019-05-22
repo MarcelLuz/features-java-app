@@ -20,6 +20,7 @@ public class InternalExtractPathsTask extends ExtractFeaturesTask {
 
     private final static Logger LOGGER = Logger.getLogger(InternalExtractPathsTask.class.getName());
     private Path destinationPath;
+    private String datasetName;
 
     @Override
     public Void call() {
@@ -57,7 +58,8 @@ public class InternalExtractPathsTask extends ExtractFeaturesTask {
         FileWriter fileWriter;
         BufferedWriter bufferedWriter;
         File baseDirectory = getDestinationPath().toFile();
-        File fileInDirectory = new File(baseDirectory, "Dataset.c2s");
+        String datasetName = getDatasetName();
+        File fileInDirectory = new File(baseDirectory, datasetName + ".c2s");
 
         ArrayList<ProgramFeatures> features;
         try {
@@ -100,5 +102,13 @@ public class InternalExtractPathsTask extends ExtractFeaturesTask {
 
     public void setDestinationPath(Path destinationPath) {
         this.destinationPath = destinationPath;
+    }
+
+    public String getDatasetName() {
+        return datasetName;
+    }
+
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
     }
 }
